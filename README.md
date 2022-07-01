@@ -2,6 +2,22 @@
 
 This plugin helps you learn English when reading passages, a bit like lingq.
 
+## Install
+
+Currently installing manually is recommended because I have yet to figure out how to get all those things under `/data` downloaded when installing through BRAT :(
+
+### BRAT
+
+1. Install [Obsidian42-BRAT](https://github.com/TfTHacker/obsidian42-brat) plugin.
+2. Click `Add new beta plugin` and fill in `jerrywcy/obsidian-english-learning`.
+3. Activate plugin.
+
+### Manually
+
+1. Download `obsidian-englihs-learning.zip` from [Releases](https://github.com/jerrywcy/obsidian-english-learning/releases).
+2. Decompress the `.zip` file and put the folder `obsidian-english-learning` under `path-to-your-vault/.obsidian/plugins/`.
+3. Activate plugin(Maybe require refreshing).
+
 ## Features
 
 ### Mark as known/unknown
