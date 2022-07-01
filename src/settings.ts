@@ -43,7 +43,9 @@ rate: 1
 
 {{meanings}}
 `,
-    meaningTemplate: `/{{text}}/![]({{link}})`,
+    meaningTemplate: `### {{partOfSpeech}}
+
+{{definitions}}`,
     phoneticTemplate: `[{{text}}]({{audio}})
 `,
     definitionTemplate: `> {{definition}}
