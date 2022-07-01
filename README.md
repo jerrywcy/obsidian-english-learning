@@ -140,3 +140,11 @@ Available variables:
 ## Advanced
 
 ### Repository structure
+
+- obsidian-english-plugin
+  - data
+    - vocabulary.json # your database
+    - highFrequencyWords.txt # high frequency word list used to initialize database
+    - dictionary.json # local dictionary. useless by far.
+  - main.js
+  - manifest.json
