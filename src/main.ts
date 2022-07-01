@@ -190,6 +190,7 @@ export default class EnglishLearningPlugin extends Plugin {
 	 */
 	async writeData() {
 		const { adapter } = app.vault;
+		// console.log(JSON.stringify(Object.fromEntries(this.vocabulary.entries())));
 		await adapter.write(vocabularyPath, JSON.stringify(Object.fromEntries(this.vocabulary.entries())));
 	}
 
@@ -222,6 +223,7 @@ export default class EnglishLearningPlugin extends Plugin {
 		else {
 			let vocabularyData = await adapter.read(vocabularyPath);
 			this.vocabulary = new Map<string, number>(Object.entries(JSON.parse(vocabularyData)));
+			console.log(this.vocabulary);
 		}
 	}
 
@@ -230,6 +232,7 @@ export default class EnglishLearningPlugin extends Plugin {
 	 * @param file The article to mark unknown word for.
 	 */
 	async markArticle(file: TFile) {
+		new Notice(`Marking ${file.name}`);
 		const { vault } = app;
 		let data = await vault.read(file);
 		let article = parseArticle(data);
@@ -256,6 +259,7 @@ export default class EnglishLearningPlugin extends Plugin {
 	 * @param file The article to learn.
 	 */
 	async learnArticle(file: TFile) {
+		new Notice(`Learning ${file.name}`);
 		const { vault } = app;
 		let data = await vault.read(file);
 		let article = parseArticle(data);

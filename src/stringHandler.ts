@@ -2,7 +2,9 @@ import { Editor } from "obsidian";
 
 import { LINK_REGEX, PUNCTUATION_REGEX } from "src/constants";
 
-const { Lexer, Tagger } = require("pos");
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import { Lexer, Tagger } from "pos";
 import { Lemmatizer } from "src/javascript-lemmatizer/js/lemmatizer.js";
 
 let lemmatizer = new Lemmatizer();
@@ -59,7 +61,8 @@ export function removePunctuation(str: string): string {
  * The second word is the word in its original form
  */
 export function parseArticle(text: string): Set<Array<string>> {
-    const article = removePunctuation(removeLinks(text));
+    const article = removePunctuation(removeLinks(text))
+        .replaceAll(/([^a-zA-Z\|\[\]])/igu, "$1 ");
     const words = new Lexer().lex(article);
     const tagger = new Tagger();
     const taggedWords = tagger.tag(words);
