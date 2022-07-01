@@ -3,7 +3,7 @@ import { Editor } from "obsidian";
 import { LINK_REGEX, PUNCTUATION_REGEX } from "src/constants";
 
 const { Lexer, Tagger } = require("pos");
-const { Lemmatizer } = require("src/javascript-lemmatizer/js/lemmatizer.js")
+import { Lemmatizer } from "src/javascript-lemmatizer/js/lemmatizer.js";
 
 let lemmatizer = new Lemmatizer();
 
