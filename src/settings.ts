@@ -91,7 +91,7 @@ Available variables:
 {{word}}: The word itself.
 {{origin}}: The origin of the word.
 {{phonetics}}: The phonetics of the word. Can be configured in Phonetic Template.
-{{meanings}}: The meanings of the word. Can be configured in Meaning Template`))
+{{meanings}}: The meanings of the word. Can be configured in Meaning Template.`))
             .addTextArea((text) => {
                 text.setPlaceholder(DEFAULT_SETTINGS.generalTemplate)
                     .setValue(this.plugin.settings.generalTemplate)

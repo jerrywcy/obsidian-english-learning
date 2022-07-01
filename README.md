@@ -1,73 +1,142 @@
-# Obsidian Sample Plugin
+# Obsidian English Learning Plugin
 
-This is a sample plugin for Obsidian (https://obsidian.md).
+This plugin helps you learn English when reading passages, a bit like lingq.
 
-This project uses Typescript to provide type checking and documentation.
-The repo depends on the latest plugin API (obsidian.d.ts) in Typescript Definition format, which contains TSDoc comments describing what it does.
+## Features
 
-**Note:** The Obsidian API is still in early alpha and is subject to change at any time!
+### Mark as known/unknown
 
-This sample plugin demonstrates some of the basic functionality the plugin API can do.
-- Changes the default font color to red using `styles.css`.
-- Adds a ribbon icon, which shows a Notice when clicked.
-- Adds a command "Open Sample Modal" which opens a Modal.
-- Adds a plugin setting tab to the settings page.
-- Registers a global click event and output 'click' to the console.
-- Registers a global interval which logs 'setInterval' to the console.
+Right click on a word to mark the word as known or unknown.
 
-## First time developing plugins?
+![Mark as unknown](./assets/mark-as-unknown.gif)
 
-Quick starting guide for new plugin devs:
+![Mark as known](./assets/mark-as-known.gif)
 
-- Check if [someone already developed a plugin for what you want](https://obsidian.md/plugins)! There might be an existing plugin similar enough that you can partner up with.
-- Make a copy of this repo as a template with the "Use this template" button (login to GitHub if you don't see it).
-- Clone your repo to a local development folder. For convenience, you can place this folder in your `.obsidian/plugins/your-plugin-name` folder.
-- Install NodeJS, then run `npm i` in the command line under your repo folder.
-- Run `npm run dev` to compile your plugin from `main.ts` to `main.js`.
-- Make changes to `main.ts` (or create new `.ts` files). Those changes should be automatically compiled into `main.js`.
-- Reload Obsidian to load the new version of your plugin.
-- Enable plugin in settings window.
-- For updates to the Obsidian API run `npm update` in the command line under your repo folder.
+### Mark article
 
-## Releasing new releases
+Click the bracket button on the page header, and all unknown words in a passage got marked.
 
-- Update your `manifest.json` with your new version number, such as `1.0.1`, and the minimum Obsidian version required for your latest release.
-- Update your `versions.json` file with `"new-plugin-version": "minimum-obsidian-version"` so older versions of Obsidian can download an older version of your plugin that's compatible.
-- Create new GitHub release using your new version number as the "Tag version". Use the exact version number, don't include a prefix `v`. See here for an example: https://github.com/obsidianmd/obsidian-sample-plugin/releases
-- Upload the files `manifest.json`, `main.js`, `styles.css` as binary attachments. Note: The manifest.json file must be in two places, first the root path of your repository and also in the release.
-- Publish the release.
+This is based on your database, so please do this ONLY after you have fed enough data into your database.
 
-> You can simplify the version bump process by running `npm version patch`, `npm version minor` or `npm version major` after updating `minAppVersion` manually in `manifest.json`.
-> The command will bump version in `manifest.json` and `package.json`, and add the entry for the new version to `versions.json`
+As you see, this process has some flaws (for example it tells me the original form of 'was' is 'wa', wth?) and takes some time due to requesting to dictionary API for word meanings. Considering add local dictionary in the future.
 
-## Adding your plugin to the community plugin list
+![Mark Article](./assets/mark-article.gif)
 
-- Check https://github.com/obsidianmd/obsidian-releases/blob/master/plugin-review.md
-- Publish an initial version.
-- Make sure you have a `README.md` file in the root of your repo.
-- Make a pull request at https://github.com/obsidianmd/obsidian-releases to add your plugin.
+### Learn article
 
-## How to use
+Click the box button on the page header, and all words not marked as unknown will be marked as known.
 
-- Clone this repo.
-- `npm i` or `yarn` to install dependencies
-- `npm run dev` to start compilation in watch mode.
+![Learn Article](./assets/learn-article.gif)
 
-## Manually installing the plugin
+## Explanations
 
-- Copy over `main.js`, `styles.css`, `manifest.json` to your vault `VaultFolder/.obsidian/plugins/your-plugin-id/`.
+### Mark a word as unuknown
 
-## Improve code quality with eslint (optional)
-- [ESLint](https://eslint.org/) is a tool that analyzes your code to quickly find problems. You can run ESLint against your plugin to find common bugs and ways to improve your code. 
-- To use eslint with this project, make sure to install eslint from terminal:
-  - `npm install -g eslint`
-- To use eslint to analyze this project use this command:
-  - `eslint main.ts`
-  - eslint will then create a report with suggestions for code improvement by file and line number.
-- If your source code is in a folder, such as `src`, you can use eslint with this command to analyze all files in that folder:
-  - `eslint .\src\`
+Create a bidirectional link and a meaning file so that you can see the words meaning by hovering on the word. Words will be automatically converted into its original form. 
 
+For examle, when marking the word 'adolescents' as unknown, all words whose original form is 'adolescent' in the passage will become a bidirectional link, and for the specific word 'adolescents', it will become '[[adolescents|adolescent]]'. At the same time, a meaning file for 'adolescent' will be created in the vocabulary folder(can be configured in settings). 
 
-## API Documentation
+**The word will be marked as unknown in the database.**
 
-See https://github.com/obsidianmd/obsidian-api
+### [Mark a word as known](#mark-as-knownunknown) 
+
+All links to the word will be replaced with the original word. The meaning file will be deleted.
+
+**The word will be marked as known in the database.**
+
+### [Mark article](#mark-article)
+
+Mark all unknown words in a article.
+
+To be specific, 'all unknown words' refers to all words except those marked as known in your database. 
+However, initially no word is marked as known in the databse since it's empty.
+
+So **DON'T** do this unless you have fed your database with enough data.
+
+### [Learn article](#learn-article)
+
+Mark all words except those already marked as unkown in an article as known in your database.
+
+A great way of **feeding database with data**, but be sure to first mark those words that you don't know unkown.
+
+### [Initialize database](#initialize-database)
+
+There is a list with high frequency words ranked from high frequency to low frequency in the "/data" folder under this plugin's folder. 
+
+This command will ask you whether you know this word or not to estimate your vocabulary and mark all words it thinks you know as known in the database.
+
+Be careful because as this command uses simple binary search rather than any complicated algorithm, it may mark some words that you don't know as known.
+
+This is only for a quick setup, the best method known is still to feed the database with articles.
+
+## Recommended way of using the plugin
+
+### Initialize database
+
+First, you should initialize your database. 
+
+There are two ways of initializing you database: using the command 'Initialize Database' or manually feed it data using [Learn Article](#learn-article).
+
+The first way is quite simple: just execute the command using command palete and answer the questions. This method is fast but somehow unstable, because this command may mark some words that you don't know as known.
+
+The second way is more complicated. You need to collect some articles, read them, mark unfamiliar words as unknown, and learn the article. This method is more complicated but more stale, for all the words you mark as unknown are indeed the words that you don't know.
+
+### Use the plugin
+
+Then you can start reading articles!
+
+Simply open the markdown file and start reading. You may mark all unknown words manually or use [Mark Article](#mark-article).
+
+If you use the second method, you may need to manually mark some words as known because there might be some words that you know but not in the database. 
+
+This is also a process of feeding data to your database.
+### Configuration
+
+#### Vocabulary File Path
+The path from vault root to the folder where meaning files are stored.
+
+Please be careful when modifying it if there are too many meaning files, because those files will be moved to new folders on settings change, so it may be a little time-consuming. 
+
+I have never tested that and in theory there shouldn't be any problem, but still be careful.
+
+You can put articles wherever you want except in the Vocabulary File Path.
+
+#### General Template
+
+A template that controls the format of meaning files generated.
+
+Available variables:
+
+`{{word}}`: The word itself.
+
+`{{origin}}`: The origin of the word.
+
+`{{phonetics}}`: The phonetics of the word. Can be configured in [Phonetic Template](#phonetic-template).
+
+`{{meanings}}`: The meanings of the word. Can be configured in [Meaning Template](#meaning-template).
+
+#### Meaning Template
+
+Available variables:
+
+`{{partOfSpeech}}`: The word's part of speech.
+
+`{{definitions}}`: The definition of the word. Can be configured in [Definition Template](#definition-template).
+
+#### Phonetic Template
+
+Available variables:
+
+`{{text}}`: The text form of the phonetic.
+
+`{{audio}}`: The link to the sound of the phonetic(not necessarily exist).
+
+#### Definition Template
+
+Available variables:
+
+`{{definition}}`: The definition of the word.
+
+## Advanced
+
+### Repository structure

@@ -3,7 +3,7 @@ import { App, Editor, editorEditorField, MarkdownView, Menu, Modal, Notice, Plug
 import { Lemmatizer } from 'src/javascript-lemmatizer/js/lemmatizer.js'
 import { Lexer, Tagger } from 'pos'
 
-import { dictionaryPath, highFrequencyWordsPath, vocabularyPath } from 'src/constants';
+import { dictionaryPath, highFrequencyWordsPath, pluginDataPath, vocabularyPath } from 'src/constants';
 import { removeLinks, removePunctuation, parseArticle, isAlpha, parseLink, getSelectedWord, addBracket, removeBracket } from "src/stringHandler"
 import { DictionaryWord, DefinitionSource } from "src/types"
 import { FreeDictionaryAPIDefinitionSource } from "src/freeDictionaryAPI"
@@ -150,7 +150,13 @@ export default class EnglishLearningPlugin extends Plugin {
 									if (word == x[0]) {
 										let flag = 0;
 										try { await this.markAsUnknown(x[1]); }
-										catch (err) { flag = 1; }
+										catch (err) {
+											if (err === "No Definitions Found") {
+												new Notice(`No Definition Found for word ${word}`);
+											}
+											flag = 1;
+											throw (err);
+										}
 										if (!flag) data = addBracket(data, article, x[1]);
 									}
 								}
@@ -196,11 +202,30 @@ export default class EnglishLearningPlugin extends Plugin {
 	 * Run in onload()
 	 */
 	async readData() {
-		const { adapter } = app.vault;
-		let dictionaryData = await adapter.read(dictionaryPath);
-		this.dictionary = JSON.parse(dictionaryData);
-		let vocabularyData = await adapter.read(vocabularyPath);
-		this.vocabulary = new Map<string, number>(Object.entries(JSON.parse(vocabularyData)));
+		const { vault } = app;
+		const { adapter } = vault;
+		if (!await adapter.exists(pluginDataPath)) {
+			await vault.createFolder(pluginDataPath);
+			await vault.create(dictionaryPath, "{}");
+			await vault.create(vocabularyPath, "{}");
+			this.vocabulary = new Map<string, number>();
+			this.dictionary = {};
+			return;
+		}
+		if (!await adapter.exists(dictionaryPath)) {
+			await vault.create(dictionaryPath, "{}");
+		}
+		else {
+			let dictionaryData = await adapter.read(dictionaryPath);
+			this.dictionary = JSON.parse(dictionaryData);
+		}
+		if (!await adapter.exists(vocabularyPath)) {
+			await vault.create(vocabularyPath, "{}");
+		}
+		else {
+			let vocabularyData = await adapter.read(vocabularyPath);
+			this.vocabulary = new Map<string, number>(Object.entries(JSON.parse(vocabularyData)));
+		}
 	}
 
 	/**
@@ -279,45 +304,37 @@ export default class EnglishLearningPlugin extends Plugin {
 	* @param word 
 	*/
 	async createFile(word: string) {
-		try {
-			let { adapter } = app.vault;
-			let { vocabularyFilePath, generalTemplate, meaningTemplate, phoneticTemplate, definitionTemplate } = this.settings;
-			let filePath = normalizePath(`${vocabularyFilePath}/${word}.md`);
-			if (await adapter.exists(filePath)) { return; }
-			let definitionSource = new FreeDictionaryAPIDefinitionSource();
-			let dictionaryWord = await definitionSource.getDefinition(word);
+		let { adapter } = app.vault;
+		let { vocabularyFilePath, generalTemplate, meaningTemplate, phoneticTemplate, definitionTemplate } = this.settings;
+		let filePath = normalizePath(`${vocabularyFilePath}/${word}.md`);
+		if (await adapter.exists(filePath)) { return; }
+		let definitionSource = new FreeDictionaryAPIDefinitionSource();
+		let dictionaryWord = await definitionSource.getDefinition(word);
 
-			let meanings = "";
-			for (let meaning of dictionaryWord.meanings) {
-				let definitions = "";
-				for (let definition of meaning.definitions) {
-					definitions += definitionTemplate
-						.replaceAll("{{definition}}", definition.definition);
-				}
-				meanings += meaningTemplate
-					.replaceAll("{{partOfSpeech}}", meaning.partOfSpeech)
-					.replaceAll("{{definitions}}", definitions);
+		let meanings = "";
+		for (let meaning of dictionaryWord.meanings) {
+			let definitions = "";
+			for (let definition of meaning.definitions) {
+				definitions += definitionTemplate
+					.replaceAll("{{definition}}", definition.definition);
 			}
-
-			let phonetics = "";
-			for (let phonetic of dictionaryWord.phonetics) {
-				phonetics += phoneticTemplate
-					.replaceAll("{{text}}", phonetic.text)
-					.replaceAll("{{audio}}", phonetic.audio);
-			}
-			let data = generalTemplate
-				.replaceAll("{{word}}", dictionaryWord.word)
-				.replaceAll("{{origin}}", dictionaryWord.origin || "unknown")
-				.replaceAll("{{meanings}}", meanings)
-				.replaceAll("{{phonetics}}", phonetics);
-
-			await adapter.write(filePath, data);
+			meanings += meaningTemplate
+				.replaceAll("{{partOfSpeech}}", meaning.partOfSpeech)
+				.replaceAll("{{definitions}}", definitions);
 		}
-		catch (err) {
-			if (err === "No Definitions Found") {
-				new Notice(`No Definition Found for word ${word}`);
-			}
-			throw (err);
+
+		let phonetics = "";
+		for (let phonetic of dictionaryWord.phonetics) {
+			phonetics += phoneticTemplate
+				.replaceAll("{{text}}", phonetic.text)
+				.replaceAll("{{audio}}", phonetic.audio);
 		}
+		let data = generalTemplate
+			.replaceAll("{{word}}", dictionaryWord.word)
+			.replaceAll("{{origin}}", dictionaryWord.origin || "unknown")
+			.replaceAll("{{meanings}}", meanings)
+			.replaceAll("{{phonetics}}", phonetics);
+
+		await adapter.write(filePath, data);
 	}
 }
