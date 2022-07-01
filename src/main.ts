@@ -52,6 +52,7 @@ export default class EnglishLearningPlugin extends Plugin {
 				for (let i = 0; i <= l; i++) {
 					await this.markAsKnown(words[i]);
 				}
+				new Notice("Database initialized!");
 			}
 		});
 

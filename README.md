@@ -28,6 +28,12 @@ Click the box button on the page header, and all words not marked as unknown wil
 
 ![Learn Article](./assets/learn-article.gif)
 
+### Initialize database
+
+Ask you several questions to estimate your vocabulary and mark them as known to provide a rough database initialization.
+
+![Initialize Database](./assets/initialize-database.gif)
+
 ## Explanations
 
 ### Mark a word as unuknown
