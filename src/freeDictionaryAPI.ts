@@ -22,11 +22,10 @@ export class FreeDictionaryAPIDefinitionSource implements DefinitionSource {
             return Promise.reject(err);
         }
 
-        const json = (await JSON.parse(result) as DictionaryWord[]);
+        let resObj = await JSON.parse(result);
+        if (!resObj || resObj.title) return Promise.reject(resObj.title);
 
-        if (!json || json["title"]) {
-            return Promise.reject(json["title"]);
-        }
+        let json: DictionaryWord[] = resObj;
 
         return json.first();
     }

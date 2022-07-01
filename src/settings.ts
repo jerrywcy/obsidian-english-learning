@@ -1,6 +1,6 @@
 import EnglishLearningPlugin from "./main";
 
-import { PluginSettingTab, App, Setting, Vault, TFolder, normalizePath } from "obsidian";
+import { PluginSettingTab, App, Setting, TFolder, normalizePath } from "obsidian";
 
 
 function createDesc(str: string): DocumentFragment {

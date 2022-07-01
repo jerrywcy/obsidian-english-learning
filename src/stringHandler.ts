@@ -1,9 +1,9 @@
-import { Editor, TAbstractFile } from "obsidian";
+import { Editor } from "obsidian";
 
 import { LINK_REGEX, PUNCTUATION_REGEX } from "src/constants";
 
-import { Lexer, Tagger } from "pos";
-import { Lemmatizer } from "src/javascript-lemmatizer/js/lemmatizer"
+const { Lexer, Tagger } = require("pos");
+import { Lemmatizer } from "src/javascript-lemmatizer/js/lemmatizer.js"
 
 let lemmatizer = new Lemmatizer();
 

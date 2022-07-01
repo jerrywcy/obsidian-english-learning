@@ -1,11 +1,7 @@
-import { App, Editor, editorEditorField, MarkdownView, Menu, Modal, Notice, Plugin, PluginSettingTab, Setting, normalizePath, FileSystemAdapter, TFile, setIcon } from 'obsidian';
-
-import { Lemmatizer } from 'src/javascript-lemmatizer/js/lemmatizer.js'
-import { Lexer, Tagger } from 'pos'
+import { Editor, MarkdownView, Menu, Notice, Plugin, normalizePath, TFile, setIcon } from 'obsidian';
 
 import { dictionaryPath, highFrequencyWordsPath, pluginDataPath, vocabularyPath } from 'src/constants';
-import { removeLinks, removePunctuation, parseArticle, isAlpha, parseLink, getSelectedWord, addBracket, removeBracket } from "src/stringHandler"
-import { DictionaryWord, DefinitionSource } from "src/types"
+import { parseArticle, getSelectedWord, addBracket, removeBracket } from "src/stringHandler"
 import { FreeDictionaryAPIDefinitionSource } from "src/freeDictionaryAPI"
 import { EnglishLearningPluginSettingTab, EnglishLearningPluginSettings, DEFAULT_SETTINGS } from './settings';
 import { DatabaseInitModal } from 'src/ui';
