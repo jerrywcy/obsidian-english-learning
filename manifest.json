@@ -1,7 +1,7 @@
 {
 	"id": "obsidian-english-learning",
 	"name": "English Learning",
-	"version": "1.0.0",
+	"version": "0.1.0",
 	"minAppVersion": "0.12.0",
 	"description": "A plugin that helps you study English by reading articles.",
 	"author": "jerrywcy",
