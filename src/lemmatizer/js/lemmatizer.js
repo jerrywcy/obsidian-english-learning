@@ -19,20 +19,20 @@ if (typeof String.endsWith !== "function") {
 export var Lemmatizer = function () {
   this.wn_files = {
     noun: [
-      '/src/javascript-lemmatizer/dict/index.noun.json',
-      '/src/javascript-lemmatizer/dict/noun.exc.json'
+      '/src/lemmatizer/dict/index.noun.json',
+      '/src/lemmatizer/dict/noun.exc.json'
     ],
     verb: [
-      '/src/javascript-lemmatizer/dict/index.verb.json',
-      '/src/javascript-lemmatizer/dict/verb.exc.json'
+      '/src/lemmatizer/dict/index.verb.json',
+      '/src/lemmatizer/dict/verb.exc.json'
     ],
     adj: [
-      '/src/javascript-lemmatizer/dict/index.adj.json',
-      '/src/javascript-lemmatizer/dict/adj.exc.json'
+      '/src/lemmatizer/dict/index.adj.json',
+      '/src/lemmatizer/dict/adj.exc.json'
     ],
     adv: [
-      '/src/javascript-lemmatizer/dict/index.adv.json',
-      '/src/javascript-lemmatizer/dict/adv.exc.json'
+      '/src/lemmatizer/dict/index.adv.json',
+      '/src/lemmatizer/dict/adv.exc.json'
     ]
   };
 
