@@ -50,7 +50,7 @@ rate: 1
 `,
     definitionTemplate: `> {{definition}}
 
-    `
+`
 }
 
 export class EnglishLearningPluginSettingTab extends PluginSettingTab {
