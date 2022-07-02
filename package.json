@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-english-learning",
-	"version": "0.1.0",
+	"version": "0.1.6",
 	"description": "A plugin that helps you study English by reading articles.",
 	"main": "main.js",
 	"scripts": {
