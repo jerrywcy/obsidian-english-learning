@@ -5,7 +5,7 @@ import { LINK_REGEX, PUNCTUATION_REGEX } from "src/constants";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { Lexer, Tagger } from "pos";
-import { Lemmatizer } from "src/javascript-lemmatizer/js/lemmatizer.js";
+import { Lemmatizer } from "./javascript-lemmatizer/js/lemmatizer.js";
 
 let lemmatizer = new Lemmatizer();
 
